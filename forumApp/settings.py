@@ -106,7 +106,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "forumapp",
         "USER": "postgres",
-        "PASSWORD": "93aRm@ni",
+        "PASSWORD": "...", # TODO add the pass
         "HOST": "host.docker.internal" if is_running_in_docker() else "127.0.0.1",
         "PORT": "5432",
     }
