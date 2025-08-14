@@ -1,0 +1,64 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_filters %}
+{% load markdown_extras %}
+
+{% block content %}
+
+<div class="container">
+    <div class="posts">
+        <div class="post">
+            {% if post.image %}
+                <img src="{{ post.image.url }}" width="1000" height="1000" alt="{{ post.title }}" class="img-fluid" />
+            {% endif %}
+            <h2>{{ post.title|capfirst }}</h2>
+            <div class="icons">
+                <a href="{% url 'edit-post' post.pk %}">
+                    <i class="fas fa-edit" style="color: green"></i>Edit</a>
+                <a href="{% url 'delete-post' post.pk %}">
+                    <i class="fas fa-trash-alt" style="color: red"></i>Delete</a>
+            </div>
+            <p>{{ post.content|markdown }}</p>
+            <div class="post-meta">
+                <span>Post by {{ post.author|default:"anonymous" }} on {{ post.created_at|date:'d-M-Y' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="form-inline">
+        {% csrf_token %}
+
+        {{ formset.management_form }}
+        <div class="input-group">
+            {% for form in formset %}
+                <div class="form-row d-flex">
+                    {{ form.content|as_crispy_field }} 
+                <div class="input-group-append">
+                    <button style="height: 50px" class="btn btn-primary ms-2">Add</button>
+                </div>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+    
+    <h2>Existing comments</h2>
+    <div class="comments-sections">
+        {% for comment in post.comments.all %}
+            <div class="media mb-3 comment-item">
+                <img class="me-3 rounded-circle comment-avatar" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0g-kBmKupSELteGkUqxLkNA8LxGEUHHZuh6bhC8uwz42_4DoHnLG5ImTJdBgDrJWmJ9k&usqp=CAU">
+                <div media-body comment-content d-flex>
+                    <div>
+                        <h5>User: {{ comment.author }}</h5>
+                    </div>
+                    <div>
+                        <p>Comment: {{ comment.content }}</p>
+                    </div>
+                    <div>
+                        <p>Date: {{ comment.created_at }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
